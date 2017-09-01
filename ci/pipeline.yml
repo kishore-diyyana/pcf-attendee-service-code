@@ -1,30 +1,30 @@
 ---
 resources:
-- name: attendee-service
+- name: my-attendee-service
   type: git
   source:
-    uri: https://github.com/YOUR_GITHUB_USER_NAME/pcf-attendee-service-code   #<----- REPLACE ME
+    uri: https://github.com/kishore-diyyana/pcf-attendee-service-code   #<----- REPLACE ME
     branch: concourse_deployment
 
 - name: deploy-attendee-service
   type: cf
   source:
-    api: YOUR_PCF_API_ENDPOINT        #<----- REPLACE ME
+    api: https://api.sys.pikes.pal.pivotal.io       #<----- REPLACE ME
     username: {{cf-user}}
     password: {{cf-password}}
-    organization: YOUR_CI_USER_ORG    #<----- REPLACE ME
-    space: YOUR_CI_USER_SPACE         #<----- REPLACE ME
+    organization: kdiyyana-pal    #<----- REPLACE ME
+    space: sandbox         #<----- REPLACE ME
     skip_cert_check: true
 
 jobs:
 - name: build
   public: true
   plan:
-  - get: attendee-service
+  - get: my-attendee-service
   - task: package
-    file: attendee-service/ci/tasks/package.yml
+    file: my-attendee-service/ci/tasks/package.yml
   - put: deploy-attendee-service
     params:
-      manifest: attendee-service/manifest.yml
+      manifest: my-attendee-service/manifest.yml
       path: package-output/attendee-service.jar
 
